@@ -42,14 +42,14 @@ else
 endif
 endif
 ifeq ($(OS), SunOS)
-	CFLAGS += -m64
+	override CFLAGS += -m64
 	LIBS   += -lsocket -lnsl
 endif
 
 # Enable checks for buffer overflows, add stack protectors, generate position
 # independent code, mark the relocation table read-only, and mark the global
 # offset table read-only.
-CFLAGS  += -D_FORTIFY_SOURCE=2 -fstack-protector-all -fPIE
+override CFLAGS  += -D_FORTIFY_SOURCE=2 -fstack-protector-all -fPIE
 
 # Don't enable some hardening flags on OS X because it uses an old version of Clang
 ifneq ($(OS), Darwin)
@@ -65,13 +65,13 @@ endif
 endif
 
 # Force C11 mode to fix the build on very old version of GCC
-CFLAGS += -std=gnu11
+override CFLAGS += -std=gnu11
 
 # for static linking
 ifeq ($(STATIC_BUILD), TRUE)
 PWD          = $(shell pwd)/openssl
 LDFLAGS      += -L${PWD}/
-CFLAGS       += -I${PWD}/include/ -I${PWD}/
+override CFLAGS       += -I${PWD}/include/ -I${PWD}/
 ifeq ($(OS), Darwin)
 LIBS	     = ./openssl/libssl.a ./openssl/libcrypto.a -lz -lpthread
 else
@@ -89,7 +89,7 @@ GIT_VERSION  := $(GIT_VERSION)-static
 else
 # for dynamic linking
 LDFLAGS   += -L/usr/local/lib -L/usr/local/ssl/lib -L/usr/local/opt/openssl/lib -L/opt/local/lib
-CFLAGS    += -I/usr/local/include -I/usr/local/ssl/include -I/usr/local/ssl/include/openssl -I/usr/local/opt/openssl/include -I/opt/local/include -I/opt/local/include/openssl
+override CFLAGS    += -I/usr/local/include -I/usr/local/ssl/include -I/usr/local/ssl/include/openssl -I/usr/local/opt/openssl/include -I/opt/local/include -I/opt/local/include/openssl
 endif
 
 # Find the number of processors on the system (used in -j option in building OpenSSL).
